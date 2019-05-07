@@ -97,38 +97,112 @@ Steps:
 
  * Download the released ZIP from ...  
  * Unzip the file to a new directory
- * Import into Eclipse
+ * Import application into Eclipse
  * Add the Secure Storage API source code
  
 ## Solace Cloud Access 7 Connectivity
 
-Login to Solace Cloud
-Get Cloud connection parameters
-(must be an Enterprise plan currently for mutual TLS authentication)
+### Login to Solace Cloud
+Participants will receive an inivtation by email to join the Bootcamp Solace Cloud Account, login at (https://console.solace.cloud/)
+![Login](assets/images/01_cloud_login.png)
+### Get Cloud Connection Parameters
+(currently requires an Enterprise plan for mutual TLS authentication)
+Locate the service
+![Login](assets/images/02_cloud_services.png)
+Select the service and switch to the `Connect` tab, expand the MQTT section and take note of the `Secured MQTT Host` URL:
+![Connectivity](assets/images/03_service_connectivity.png)
 
-Verify client username
+### Verify client username
+Click the `Manage` menu and select `Access Control`
+![manage acl](assets/images/04_manage_clients.png)
 
+Switch to `Client Usernames` and verify your device identifier exists (in the bootcamp this should be your device IMEI)
+![Client user name](assets/images/05_client_username.png)
 ## Running the sample application
 
 ### Setup Connectivity & Security
+* Locate the file `aws_iot_config.h`
+* Replace `AWS_IOT_MQTT_HOST`
+* If you provisioned the certificates and key under different keys in the secure storage adjust AWS_IOT_ROOT_CA_FILENAME, AWS_IOT_CERTIFICATE_FILENAME, AWS_IOT_PRIVATE_KEY_FILENAME
 
-
-Set the Solace Cloud service host
-Adjust the certificate and key locations if required (provide custom keys for retrieval from secure storage if applicable)
+```
+// =================================================
+#define AWS_IOT_MQTT_HOST              "mrjfgwkeg1cer.messaging.solace.cloud" ///< Customer specific MQTT HOST.
+#define AWS_IOT_MQTT_PORT              8883 ///< default port for MQTT/S
+#define AWS_IOT_MQTT_CLIENT_ID         "default" ///< MQTT client ID should be unique for every device
+#define AWS_IOT_ROOT_CA_FILENAME       "digicert-ca" ///< Root CA file name
+#define AWS_IOT_CERTIFICATE_FILENAME   "device-cert" ///< device signed certificate file name
+#define AWS_IOT_PRIVATE_KEY_FILENAME   "device-private-key" ///< Device private key filename
+```
 ### Create a remote debug configuration
+In Eclipse add a new Debug Configuration:
+![Eclipse debug](assets/images/06_Eclipse_DebugSetup.png)
+Select your application/project and set up the commands to send prior to running GDB
+![Eclipse debug](assets/images/07_Eclipse_DebugSetup2.png)
+Set up the SSH connection to your raspberry PI
+![Eclipse debug](assets/images/08_Eclipse_DebugSetupSSH.png)
+
+See section 4 here: (https://dontpressthat.wordpress.com/2017/11/15/using-eclipse-to-write-c-c-programs-for-the-raspberrypi/)
 
 ### Run
 Start debugger
+![Eclipse debug](assets/images/10_Eclipse_DebugRun.png)
+
+The application writes various information to the standard out, take note of the topics "Subscribing to device command" and  "Publishing to topic" as you need these to verify MQTT connectivity:
+```
+****************************************
+IMEI / Device id [866425035154774]
+****************************************
+DEBUG:   main L#224 rootCA digicert-ca
+DEBUG:   main L#225 clientCRT device-cert
+DEBUG:   main L#226 clientKey device-private-key
+Connecting...
+****************************************
+Subscribing to device command... [$create/iot-control/CA/ON/device/866425035154774/command]
+Subscribing to regional command... [$create/iot-control/CA/ON/device/command]
+Subscribing to national command ... [$create/iot-control/CA/device/command]
+****************************************
+****************************************
+Publishing to topic [$create/iot-control/CA/ON/device/866425035154774/status]
+****************************************
+```
 
 ### Verify MQTT connectivity
 * Outbound message from the device
 * Inbound message to the device
+#### Connect the Solace Cloud try-me console
+* Go to the Solace Cloud Console
+* Locate your service and open its page
+* Select the `Try Me!` tab
+* Set the `Publisher` topic on the left hand side to the value of `Subscribing to device command` noted above.
+* Set the `Subscriber` topic on the right hand side to the value of `Publishing to topic`noted above
+![topics](assets/images/s_verify_01_tryme_topics.png)
+Then connect both Publisher and Subscriber using the `Connect` button. Also click the `Subsrcibe` button on the right hand side
+![connect](assets/images/s_verify_02_tryme_connected.png)
 
+#### Locate the user programmable  button and LED
+Schematic:
+![schematic](https://camo.githubusercontent.com/d23cd40a383a105d734a0b8d83eb6a44aa72dc29/68747470733a2f2f7369786661622d636f6d2e6578616374646e2e636f6d2f77702d636f6e74656e742f75706c6f6164732f323031382f31302f7270695f63656c6c756c6172696f745f6170706c69636174696f6e5f736869656c645f6c61796f75742d312e706e673f73747269703d616c6c2673736c3d31)
+Photograph, look for label `user`:
+![photo](https://github.com/TELUS-Emerging-IoT/TELUS-Devkit-Hardware-Tutorial/raw/master/images/cellular_shield_front.jpg)
 #### Verify messages sent from device
+* Press the user button
+* Verify messages are received in the `Try Me!` console on the right hand side:
+![receive](assets/images/s_verify_03_tryme_msg_received.png)
 
 #### Verify messages are received by device
+* Send a message from the `Try Me!` console: on the left hand side enter a message text and click `Publish`
+s_verify_03_tryme_msg_sent
+![send](assets/images/s_verify_03_tryme_msg_sent.png)
 
+* Verify that user LED blinks three times
+* Application logs the messages it receives to standard out:
 
+```
+$create/iot-control/CA/ON/device/866425035154774/command	Hello world!
+Subscribe callback
+$create/iot-control/CA/ON/device/866425035154774/command	Hello world!
+```
 
 ## Resources
 [API Documentation](http://aws-iot-device-sdk-embedded-c-docs.s3-website-us-east-1.amazonaws.com/index.html)
