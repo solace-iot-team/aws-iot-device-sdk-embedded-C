@@ -1,4 +1,19 @@
 /*
+ * Copyright 2019 Solace Corporation. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * A copy of the License is located at
+ *
+ *  https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * or in the "license" file accompanying this file. This file is distributed
+ * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+// Based on aws-iot-sdk for Embedded C.
+/*
  * Copyright 2010-2015 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -169,6 +184,12 @@ typedef struct {
 	char *pRootCALocation;				///< Pointer to a string defining the Root CA file (full file, not path)
 	char *pDeviceCertLocation;			///< Pointer to a string defining the device identity certificate file (full file, not path)
 	char *pDevicePrivateKeyLocation;        	///< Pointer to a string defining the device private key file (full file, not path)
+	unsigned char *pRootCAPayload;				///< Pointer to an unsigned char array containing the Root CA
+	unsigned char *pDeviceCertPayload;			///< Pointer to an unsigned char array containing the device identity certificate
+	unsigned char *pDevicePrivatePayload;        	///< Pointer to an unsigned char array containing the device private key
+	int rootCAPayloadLength;				///< Payload length of the Root CA file 
+	int deviceCertPayloadLength;			///< Payload length of the device identity certificate file
+	int devicePrivatePayloadLength;        	///< Payload length of the device private key file 
 	uint32_t mqttPacketTimeout_ms;			///< Timeout for reading a complete MQTT packet. In milliseconds
 	uint32_t mqttCommandTimeout_ms;			///< Timeout for MQTT blocking calls. In milliseconds
 	uint32_t tlsHandshakeTimeout_ms;		///< TLS handshake timeout.  In milliseconds
@@ -182,9 +203,9 @@ typedef struct {
 extern const IoT_Client_Init_Params iotClientInitParamsDefault;
 
 #ifdef _ENABLE_THREAD_SUPPORT_
-#define IoT_Client_Init_Params_initializer { true, NULL, 0, NULL, NULL, NULL, 2000, 20000, 5000, true, NULL, NULL, false }
+#define IoT_Client_Init_Params_initializer { true, NULL, 0, NULL, NULL, NULL,NULL, NULL, NULL, 0,0,0, 2000, 20000, 5000, true, NULL, NULL, false }
 #else
-#define IoT_Client_Init_Params_initializer { true, NULL, 0, NULL, NULL, NULL, 2000, 20000, 5000, true, NULL, NULL }
+#define IoT_Client_Init_Params_initializer { true, 0, NULL, 0, NULL, NULL, NULL,NULL, NULL, NULL,0, 0, 0, 2000, 20000, 5000, true, NULL, NULL }
 #endif
 
 /**

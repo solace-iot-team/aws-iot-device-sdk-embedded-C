@@ -137,12 +137,6 @@ typedef enum {
 			MQTT_CONNACK_NOT_AUTHORIZED_ERROR = -41,
 	/** An error occurred while parsing the JSON string.  Usually malformed JSON. */
 			JSON_PARSE_ERROR = -42,
-	/** Shadow: The response Ack table is currently full waiting for previously published updates */
-			SHADOW_WAIT_FOR_PUBLISH = -43,
-	/** Any time an snprintf writes more than size value, this error will be returned */
-			SHADOW_JSON_BUFFER_TRUNCATED = -44,
-	/** Any time an snprintf encounters an encoding error or not enough space in the given buffer */
-			SHADOW_JSON_ERROR = -45,
 	/** Mutex initialization failed */
 			MUTEX_INIT_ERROR = -46,
 	/** Mutex lock request failed */

@@ -1,4 +1,19 @@
 /*
+ * Copyright 2019 Solace Corporation. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * A copy of the License is located at
+ *
+ *  https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * or in the "license" file accompanying this file. This file is distributed
+ * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+// Based on aws-iot-sdk for Embedded C.
+/*
  * Copyright 2010-2015 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -51,6 +66,12 @@ typedef struct {
 	char *pRootCALocation;                ///< Pointer to string containing the filename (including path) of the root CA file.
 	char *pDeviceCertLocation;            ///< Pointer to string containing the filename (including path) of the device certificate.
 	char *pDevicePrivateKeyLocation;    ///< Pointer to string containing the filename (including path) of the device private key file.
+	unsigned char *pRootCAPayload;                ///< Pointer to string containing the filename (including path) of the root CA file.
+	unsigned char *pDeviceCertPayload;            ///< Pointer to string containing the filename (including path) of the device certificate.
+	unsigned char *pDevicePrivateKeyPayload;    ///< Pointer to string containing the filename (including path) of the device private key file.
+	int rootCAPayloadLength;
+	int deviceCertPayloadLength;            ///< Pointer to string containing the filename (including path) of the device certificate.
+	int devicePrivateKeyPayloadLength;    ///< Pointer to string containing the filename (including path) of the device private key file.
 	char *pDestinationURL;                ///< Pointer to string containing the endpoint of the MQTT service.
 	uint16_t DestinationPort;            ///< Integer defining the connection port of the MQTT service.
 	uint32_t timeout_ms;                ///< Unsigned integer defining the TLS handshake timeout value in milliseconds.
@@ -94,8 +115,11 @@ struct Network {
  * @return IoT_Error_t - successful initialization or TLS error
  */
 IoT_Error_t iot_tls_init(Network *pNetwork, char *pRootCALocation, char *pDeviceCertLocation,
-						 char *pDevicePrivateKeyLocation, char *pDestinationURL,
-						 uint16_t DestinationPort, uint32_t timeout_ms, bool ServerVerificationFlag);
+		 char *pDevicePrivateKeyLocation,unsigned char *pRootCAPayload, int rootCAPayloadLength,
+		 unsigned char *pDeviceCertPayload, int deviceCertPayloadLength,
+		 unsigned char *pDevicePrivateKeyPayload, int devicePrivateKeyPayloadLength,
+		 char *pDestinationURL,
+		 uint16_t destinationPort, uint32_t timeout_ms, bool ServerVerificationFlag);
 
 /**
  * @brief Create a TLS socket and open the connection

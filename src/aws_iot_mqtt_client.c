@@ -1,4 +1,19 @@
 /*
+ * Copyright 2019 Solace Corporation. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * A copy of the License is located at
+ *
+ *  https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * or in the "license" file accompanying this file. This file is distributed
+ * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+ // Based on aws-iot-sdk for embedded C
+/*
 * Copyright 2015-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License").
@@ -261,7 +276,10 @@ IoT_Error_t aws_iot_mqtt_init(AWS_IoT_Client *pClient, IoT_Client_Init_Params *p
 	pClient->clientStatus.isAutoReconnectEnabled = pInitParams->enableAutoReconnect;
 
 	rc = iot_tls_init(&(pClient->networkStack), pInitParams->pRootCALocation, pInitParams->pDeviceCertLocation,
-					  pInitParams->pDevicePrivateKeyLocation, pInitParams->pHostURL, pInitParams->port,
+					  pInitParams->pDevicePrivateKeyLocation, pInitParams->pRootCAPayload, pInitParams->rootCAPayloadLength,
+					  pInitParams->pDeviceCertPayload, pInitParams->deviceCertPayloadLength,
+					  pInitParams->pDevicePrivatePayload, pInitParams->devicePrivatePayloadLength,
+					  pInitParams->pHostURL, pInitParams->port,
 					  pInitParams->tlsHandshakeTimeout_ms, pInitParams->isSSLHostnameVerify);
 
 	if(SUCCESS != rc) {
