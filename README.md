@@ -10,7 +10,9 @@ The Solace MQTT IoT SDK provides secure MQTT connectivity on the IoT Accelerator
 
 It is based on [aws-iot Embedded C Device SDK](https://github.com/aws/aws-iot-device-sdk-embedded-C/) and includes the following modifications:
 
-* Removed AWS IoT Hub specific feature (Device Shadow)
+* Removed AWS IoT Hub specific features - Device Shadow, Jobs
+* Removed samples, tests
+* Added mbedTLS source code, v [2.17](https://github.com/ARMmbed/mbedtls/tree/mbedtls-2.17)
 * Added support to pass in Root CA,Device Certificate and Device Key to the library rather than reading from files
 * Added example of how to access the Telus Secure Storage to read certificates and keys and pass these into the MQTT client library to establish a TLS connection
 
@@ -18,11 +20,40 @@ Changes have been added to the master branch of this repository.
 
 Find a getting started tutorial below, the original release branch [readme.md](https://github.com/aws/aws-iot-device-sdk-embedded-C/blob/release/README.md) applies. 
 
+## Overview
+* Prerequisites
+  * Set up the hardware and modem connectivity 
+  * Obtain the Telus Modem / Secure Storage API (compiled versio may be delivered with BlackBerry OS,  
+  * Optional - Apply BlackBerry security patch to Raspbian
+  * Optional - provision certificates and keys onto the secure storage
+* Set up a development environment:
+  * Develop direct on Raspberry PI / device (not documented in this readme)
+  * Eclipse on MacOs or Windows
+* SDK and sample applicaiton installation
+* Solace Cloud Access and Connectivity
+* Run sample application
 
+## Prerequisites
+### Set up the hardware and modem connectivity
+See this [tutorial](https://github.com/TELUS-Emerging-IoT/TELUS-Devkit-Hardware-Tutorial/blob/master/README.md)
 
+### Obtain Telus Modem / Secure Storage API
+TBC - may be packaged with Operating System. If building from source will supply C14/C++14 compatible source code on request.
+## Development directly on Device
+Source code is provided as is with a sample make file. No further instrucitons are available at this point.
 
+## Set up Eclipse Development Environment
+### Install Eclipe for C/CPP
+Windows or Mac
+### Obtain and install Raspberry Pi Tool Chain
+Links to MacOS and Windows based tool chains
+### Set up remote debugging using GDB
 
-## Installation
+### Import required libraries form Raspberry PI
+Currently only Wiring PI required.
+TBC - Telus API if provided with OS
+
+## SDK and Sample Installation
 This section explains the individual steps to retrieve the necessary files and be able to build your first application using the AWS IoT device SDK for embedded C.
 
 Steps:
@@ -36,12 +67,11 @@ Steps:
     * `external_libs` - The mbedTLS and jsmn source files
     * `include` - The AWS IoT SDK header files
     * `platform` - Platform specific files for timer, TLS and threading layers
-    * `samples` - The sample applications
     * `src` - The AWS IoT SDK source files
-    * `tests` - Contains tests for verifying that the SDK is functioning as expected. More information can be found [here](https://github.com/aws/aws-iot-device-sdk-embedded-c/blob/master/tests/README.md)
- * View further information on how to use the SDK in the Readme file for samples that can be found [here](https://github.com/aws/aws-iot-device-sdk-embedded-c/blob/master/samples/README.md)
 
-Also, for a guided example on getting started with the Thing Shadow, visit the AWS IoT Console's [Interactive Guide](https://console.aws.amazon.com/iot).
+## Solace Cloud Access 7 Connectivity
+
+## Running the sample application
 
 
 ## Resources
