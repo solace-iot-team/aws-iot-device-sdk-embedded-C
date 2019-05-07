@@ -95,11 +95,19 @@ This section explains the individual steps to retrieve the necessary SDK files a
 
 Steps:
 
- * Download the released ZIP from ...  
+ * Download the released ZIP from https://github.com/solace-iot-team/solace-iot-device-sdk-embedded-C/releases/tag/v.0.9.0  
  * Unzip the file to a new directory
  * Import application into Eclipse
- * Add the Secure Storage API source code
+ * Add the Secure Storage API source code - copy headers into `inc-gd` folder, code into `src-gd` folder.
  
+### Import Project into Eclipse
+
+Select import menu, then `From existing project folder` under `General` 
+![import_1](assets/images/100_eclipse_import_menu.png)
+![import_2](assets/images/110_eclipse_import_select_type.png)
+Locate the folder where you stored the source code, the project should be detected. Click `Finish`
+![import_3](assets/images/120_eclipse_import_select_folder.png)
+
 ## Solace Cloud Access 7 Connectivity
 
 ### Login to Solace Cloud
