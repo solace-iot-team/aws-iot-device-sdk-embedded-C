@@ -102,12 +102,22 @@ Steps:
  
 ## Solace Cloud Access 7 Connectivity
 
-Login to Solace Cloud
-Get Cloud connection parameters
-(must be an Enterprise plan currently for mutual TLS authentication)
+### Login to Solace Cloud
+Participants will receive an inivtation by email to join the Bootcamp Solace Cloud Account, login at (https://console.solace.cloud/)
+![Login](assets/images/01_cloud_login.png)
+### Get Cloud Connection Parameters
+(currently requires an Enterprise plan for mutual TLS authentication)
+Locate the service
+![Login](assets/images/02_cloud_services.png)
+Select the service and switch to the `Connect` tab, expand the MQTT section and take note of the `Secured MQTT Host` URL:
+![Connectivity](assets/images/03_service_connectivity.png)
 
-Verify client username
+### Verify client username
+Click the `Manage` menu and select `Access Control`
+![manage acl](assets/images/04_manage_clients.png)
 
+Switch to `Client Usernames` and verify your device identifier exists (in the bootcamp this should be your device IMEI)
+![Client user name](assets/images/05_client_username.png)
 ## Running the sample application
 
 ### Setup Connectivity & Security
@@ -148,9 +158,9 @@ Publishing to topic [$create/iot-control/CA/ON/device/866425035154774/status]
 
 #### Locate the user programmable  button and LED
 Schematic:
-(https://camo.githubusercontent.com/d23cd40a383a105d734a0b8d83eb6a44aa72dc29/68747470733a2f2f7369786661622d636f6d2e6578616374646e2e636f6d2f77702d636f6e74656e742f75706c6f6164732f323031382f31302f7270695f63656c6c756c6172696f745f6170706c69636174696f6e5f736869656c645f6c61796f75742d312e706e673f73747269703d616c6c2673736c3d31)
+![schematic](https://camo.githubusercontent.com/d23cd40a383a105d734a0b8d83eb6a44aa72dc29/68747470733a2f2f7369786661622d636f6d2e6578616374646e2e636f6d2f77702d636f6e74656e742f75706c6f6164732f323031382f31302f7270695f63656c6c756c6172696f745f6170706c69636174696f6e5f736869656c645f6c61796f75742d312e706e673f73747269703d616c6c2673736c3d31)
 Photograph, look for label `user`:
-(https://github.com/TELUS-Emerging-IoT/TELUS-Devkit-Hardware-Tutorial/raw/master/images/cellular_shield_front.jpg)
+![photo](https://github.com/TELUS-Emerging-IoT/TELUS-Devkit-Hardware-Tutorial/raw/master/images/cellular_shield_front.jpg)
 #### Verify messages sent from device
 * Press the user button
 * Verify messages are received in the try-me console:
