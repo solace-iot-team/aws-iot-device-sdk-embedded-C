@@ -171,6 +171,14 @@ Publishing to topic [$create/iot-control/CA/ON/device/866425035154774/status]
 * Outbound message from the device
 * Inbound message to the device
 #### Connect the Solace Cloud try-me console
+* Go to the Solace Cloud Console
+* Locate your service and open its page
+* Select the `Try Me!` tab
+* Set the `Publisher` topic on the left hand side to the value of `Subscribing to device command` noted above.
+* Set the `Subscriber` topic on the right hand side to the value of `Publishing to topic`noted above
+![topics](assets/images/s_verify_01_tryme_topics.png)
+Then connect both Publisher and Subscriber using the `Connect` button. Also click the `Subsrcibe` button on the right hand side
+![connect](assets/images/s_verify_02_tryme_connected.png)
 
 #### Locate the user programmable  button and LED
 Schematic:
@@ -179,12 +187,16 @@ Photograph, look for label `user`:
 ![photo](https://github.com/TELUS-Emerging-IoT/TELUS-Devkit-Hardware-Tutorial/raw/master/images/cellular_shield_front.jpg)
 #### Verify messages sent from device
 * Press the user button
-* Verify messages are received in the try-me console:
+* Verify messages are received in the `Try Me!` console on the right hand side:
+![receive](assets/images/s_verify_03_tryme_msg_received.png)
 
 #### Verify messages are received by device
-* Send a message from the try-me console
-* Verify user LED blinks
-* Application output logs messages
+* Send a message from the `Try Me!` console: on the left hand side enter a message text and click `Publish`
+s_verify_03_tryme_msg_sent
+![send](assets/images/s_verify_03_tryme_msg_sent.png)
+
+* Verify that user LED blinks three times
+* Application logs the messages it receives to standard out:
 
 ```
 $create/iot-control/CA/ON/device/866425035154774/command	Hello world!
