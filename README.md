@@ -29,7 +29,7 @@ Find a getting started tutorial below, the original release branch [readme.md](h
 * Set up a development environment:
   * Develop direct on Raspberry PI / device (not documented in this readme)
   * Eclipse on MacOs or Windows
-* SDK and sample applicaiton installation
+* SDK and sample application installation
 * Solace Cloud Access and Connectivity
 * Run sample application
 
@@ -39,39 +39,92 @@ See this [tutorial](https://github.com/TELUS-Emerging-IoT/TELUS-Devkit-Hardware-
 
 ### Obtain Telus Modem / Secure Storage API
 TBC - may be packaged with Operating System. If building from source will supply C14/C++14 compatible source code on request.
+
+### Optional - Apply BlackBerry security patch to Raspbian
+TBC - add link
+
+### Optional - provision certificates and keys onto the secure storage
+The repository contains a sample application () that uploads files to the secure storage.
+Participants wil be eithe rprovided with a pre-configured SIM or will be supplied with the device certificate, key and Digicert Rooot CA Certificate for Solace Cloud.
+
 ## Development directly on Device
 Source code is provided as is with a sample make file. No further instrucitons are available at this point.
 
 ## Set up Eclipse Development Environment
 ### Install Eclipe for C/CPP
-Windows or Mac
+Download and install Eclipse [IDE for C/C++ Developers](https://www.eclipse.org/downloads/packages/release/2019-03/r/eclipse-ide-cc-developers) for your platform.
+
 ### Obtain and install Raspberry Pi Tool Chain
-Links to MacOS and Windows based tool chains
+Tool chains for different platforms are available:
+* Windows: http://gnutoolchains.com/raspberry/
+* MacOS (verified during SDK adaption): https://www.jaredwolff.com/toolchains/#show1
+* Linux: https://github.com/raspberrypi/tools/tree/master/arm-bcm2708
+
+Instructions on setting up a cross compile tool chain for RaspBerry PI in Eclipse - (https://dontpressthat.wordpress.com/2017/11/15/using-eclipse-to-write-c-c-programs-for-the-raspberrypi/)
+
+
 ### Set up remote debugging using GDB
 
-### Import required libraries form Raspberry PI
-Currently only Wiring PI required.
-TBC - Telus API if provided with OS
+Eclipse includes support to create remote debug configurations that execute applications via SSH and GDB on a target system. This requires GDB server to run on the Raspberry PI.
+Install gdbserver on Raspberry PI, execute the following commands on the Raspberry PI:
+
+```
+$ sudo apt-get install gdbserver
+
+$ gdbserver --multi 192.168.0.131:2345
+```
+
+(http://geomodule.com/sw-eng-notes/2017/03/25/raspberry-pi-debugging-with-gdb-command-line/)
+
+### Import required libraries from Raspberry PI
+
+In order to compile code that relies on libraries installe don the Raspberry PI these need to be added to the Tool Chain.
+The basic process is explained here: (https://raspberry-projects.com/pi/programming-in-c/compilers-and-ides/eclipse/adding-libraries-to-eclipse-for-windows)
+
+The sample application requires Wiring PI to interact with the shield's user button and LED.
+Add the header files and libraries to the toolchain as described above, obtain these from the raspberry PI via SCP:
+```
+$ scp {user}@{host or ip}:/usr/lib/libwiringPi* {local toolchain lib directory}
+$ scp {user}@{host or ip}:/usr/include/wiringPi* {local toolchain include directory}
+```
+
+TBC - Download Telus API lib and include if provided with OS.
 
 ## SDK and Sample Installation
-This section explains the individual steps to retrieve the necessary files and be able to build your first application using the AWS IoT device SDK for embedded C.
+This section explains the individual steps to retrieve the necessary SDK files and be able to build the sample application.
 
 Steps:
 
- * Create a directory to hold your application e.g. (/home/<user>/aws_iot/my_app)
- * Change directory to this new directory
- * Download the SDK to device and place in the newly created directory
- * Expand the tarball (tar -xf <tarball.tar>).  This will create the below directories:
-    * `certs` - TLS certificates directory
-    * `docs` - SDK API and file documentation. This folder is not present on GitHub. You can access the documentation [here](http://aws-iot-device-sdk-embedded-c-docs.s3-website-us-east-1.amazonaws.com/index.html)
-    * `external_libs` - The mbedTLS and jsmn source files
-    * `include` - The AWS IoT SDK header files
-    * `platform` - Platform specific files for timer, TLS and threading layers
-    * `src` - The AWS IoT SDK source files
-
+ * Download the released ZIP from ...  
+ * Unzip the file to a new directory
+ * Import into Eclipse
+ * Add the Secure Storage API source code
+ 
 ## Solace Cloud Access 7 Connectivity
 
+
+
+
 ## Running the sample application
+
+### Setup Connectivity & Security
+
+
+Set the Solace Cloud service host
+Adjust the certificate and key locations if required (provide custom keys for retrieval from secure storage if applicable)
+### Create a remote debug configuration
+
+### Run
+Start debugger
+
+### Verify MQTT connectivity
+* Outbound message from the device
+* Inbound message to the device
+
+#### Verify messages sent from device
+
+#### Verify messages are 
+
 
 
 ## Resources
