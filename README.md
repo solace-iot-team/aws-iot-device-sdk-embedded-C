@@ -97,7 +97,7 @@ Steps:
 
  * Download the released ZIP from ...  
  * Unzip the file to a new directory
- * Import into Eclipse
+ * Import application into Eclipse
  * Add the Secure Storage API source code
  
 ## Solace Cloud Access 7 Connectivity
@@ -117,18 +117,54 @@ Set the Solace Cloud service host
 Adjust the certificate and key locations if required (provide custom keys for retrieval from secure storage if applicable)
 ### Create a remote debug configuration
 
+
 ### Run
 Start debugger
+
+
+The application writes various information to the standard out, take note of the topics as you need these to verify MQTT connectivity:
+```
+****************************************
+IMEI / Device id [866425035154774]
+****************************************
+DEBUG:   main L#224 rootCA digicert-ca
+DEBUG:   main L#225 clientCRT device-cert
+DEBUG:   main L#226 clientKey device-private-key
+Connecting...
+****************************************
+Subscribing to device command... [$create/iot-control/CA/ON/device/866425035154774/command]
+Subscribing to regional command... [$create/iot-control/CA/ON/device/command]
+Subscribing to national command ... [$create/iot-control/CA/device/command]
+****************************************
+****************************************
+Publishing to topic [$create/iot-control/CA/ON/device/866425035154774/status]
+****************************************
+```
 
 ### Verify MQTT connectivity
 * Outbound message from the device
 * Inbound message to the device
+#### Connect the Solace Cloud try-me console
 
+#### Locate the user programmable  button and LED
+Schematic:
+(https://camo.githubusercontent.com/d23cd40a383a105d734a0b8d83eb6a44aa72dc29/68747470733a2f2f7369786661622d636f6d2e6578616374646e2e636f6d2f77702d636f6e74656e742f75706c6f6164732f323031382f31302f7270695f63656c6c756c6172696f745f6170706c69636174696f6e5f736869656c645f6c61796f75742d312e706e673f73747269703d616c6c2673736c3d31)
+Photograph, look for label `user`:
+(https://github.com/TELUS-Emerging-IoT/TELUS-Devkit-Hardware-Tutorial/raw/master/images/cellular_shield_front.jpg)
 #### Verify messages sent from device
+* Press the user button
+* Verify messages are received in the try-me console:
 
 #### Verify messages are received by device
+* Send a message from the try-me console
+* Verify user LED blinks
+* Application output logs messages
 
-
+```
+$create/iot-control/CA/ON/device/866425035154774/command	Hello world!
+Subscribe callback
+$create/iot-control/CA/ON/device/866425035154774/command	Hello world!
+```
 
 ## Resources
 [API Documentation](http://aws-iot-device-sdk-embedded-c-docs.s3-website-us-east-1.amazonaws.com/index.html)
