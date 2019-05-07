@@ -51,7 +51,7 @@ Participants wil be eithe rprovided with a pre-configured SIM or will be supplie
 Source code is provided as is with a sample make file. No further instrucitons are available at this point.
 
 ## Set up Eclipse Development Environment
-### Install Eclipe for C/CPP
+### Install Eclipse for C/CPP
 Download and install Eclipse [IDE for C/C++ Developers](https://www.eclipse.org/downloads/packages/release/2019-03/r/eclipse-ide-cc-developers) for your platform.
 
 ### Obtain and install Raspberry Pi Tool Chain
@@ -102,8 +102,11 @@ Steps:
  
 ## Solace Cloud Access 7 Connectivity
 
+Login to Solace Cloud
+Get Cloud connection parameters
+(must be an Enterprise plan currently for mutual TLS authentication)
 
-
+Verify client username
 
 ## Running the sample application
 
@@ -123,7 +126,7 @@ Start debugger
 
 #### Verify messages sent from device
 
-#### Verify messages are 
+#### Verify messages are received by device
 
 
 
