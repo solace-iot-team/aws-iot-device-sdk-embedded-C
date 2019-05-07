@@ -121,18 +121,34 @@ Switch to `Client Usernames` and verify your device identifier exists (in the bo
 ## Running the sample application
 
 ### Setup Connectivity & Security
+* Locate the file `aws_iot_config.h`
+* Replace `AWS_IOT_MQTT_HOST`
+* If you provisioned the certificates and key under different keys in the secure storage adjust AWS_IOT_ROOT_CA_FILENAME, AWS_IOT_CERTIFICATE_FILENAME, AWS_IOT_PRIVATE_KEY_FILENAME
 
-
-Set the Solace Cloud service host
-Adjust the certificate and key locations if required (provide custom keys for retrieval from secure storage if applicable)
+```
+// =================================================
+#define AWS_IOT_MQTT_HOST              "mrjfgwkeg1cer.messaging.solace.cloud" ///< Customer specific MQTT HOST.
+#define AWS_IOT_MQTT_PORT              8883 ///< default port for MQTT/S
+#define AWS_IOT_MQTT_CLIENT_ID         "default" ///< MQTT client ID should be unique for every device
+#define AWS_IOT_ROOT_CA_FILENAME       "digicert-ca" ///< Root CA file name
+#define AWS_IOT_CERTIFICATE_FILENAME   "device-cert" ///< device signed certificate file name
+#define AWS_IOT_PRIVATE_KEY_FILENAME   "device-private-key" ///< Device private key filename
+```
 ### Create a remote debug configuration
+In Eclipse add a new Debug Configuration:
+![Eclipse debug](assets/images/06_Eclipse_DebugSetup.png)
+Select your application/project and set up the commands to send prior to running GDB
+![Eclipse debug](assets/images/07_Eclipse_DebugSetup2.png)
+Set up the SSH connection to your raspberry PI
+![Eclipse debug](assets/images/08_Eclipse_DebugSetupSSH.png)
 
+See section 4 here: (https://dontpressthat.wordpress.com/2017/11/15/using-eclipse-to-write-c-c-programs-for-the-raspberrypi/)
 
 ### Run
 Start debugger
+![Eclipse debug](assets/images/10_Eclipse_DebugRun.png)
 
-
-The application writes various information to the standard out, take note of the topics as you need these to verify MQTT connectivity:
+The application writes various information to the standard out, take note of the topics "Subscribing to device command" and  "Publishing to topic" as you need these to verify MQTT connectivity:
 ```
 ****************************************
 IMEI / Device id [866425035154774]
