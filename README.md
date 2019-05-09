@@ -23,7 +23,7 @@ Find a getting started tutorial below, the original release branch [readme.md](h
 ## Overview
 * Prerequisites
   * Set up the hardware and modem connectivity 
-  * Obtain the Telus Modem / Secure Storage API (compiled versio may be delivered with BlackBerry OS,  
+  * Obtain the Telus Modem / Secure Storage API  
   * Optional - Apply BlackBerry security patch to Raspbian
   * Optional - provision certificates and keys onto the secure storage
 * Set up a development environment:
@@ -47,7 +47,7 @@ TBC - add link
 
 ### Optional - provision certificates and keys onto the secure storage
 The repository contains a sample application () that uploads files to the secure storage.
-Participants wil be eithe rprovided with a pre-configured SIM or will be supplied with the device certificate, key and Digicert Rooot CA Certificate for Solace Cloud.
+Participants wil be either provided with a pre-configured SIM or will be supplied with the device certificate, key and Digicert Rooot CA Certificate for Solace Cloud.
 
 ## Development directly on Device
 Source code is provided as is with a sample make file. No further instrucitons are available at this point.
@@ -80,7 +80,7 @@ $ gdbserver --multi 192.168.0.131:2345
 
 ### Import required libraries from Raspberry PI
 
-In order to compile code that relies on libraries installe don the Raspberry PI these need to be added to the Tool Chain.
+In order to compile code that relies on libraries installed on the Raspberry PI these need to be added to the Tool Chain.
 The basic process is explained here: (https://raspberry-projects.com/pi/programming-in-c/compilers-and-ides/eclipse/adding-libraries-to-eclipse-for-windows)
 
 The sample application requires Wiring PI to interact with the shield's user button and LED.
@@ -95,7 +95,7 @@ The SCC Toolkit requires libpcsclite, as above please obtian these files via SCP
 $ scp {user}@{host or ip}:/usr/lib/arm-linux-gnueabihf/libpcsclite.* {local toolchain sysroot/usr/lib directory}
 
 ```
-Copy SCC Toolkit library components to your `sysroot` directory, headers form folder `inc` to `sysroot/usr/include`, `libscc-toolkit.so` and `libscc-toolkit.a` to `sysroot/usr/lib`
+Copy SCC Toolkit library components to your `sysroot` directory, headers from folder `inc` to `sysroot/usr/include`, `libscc-toolkit.so` and `libscc-toolkit.a` to `sysroot/usr/lib`
 
 ## SDK and Sample Installation
 This section explains the individual steps to retrieve the necessary SDK files and be able to build the sample application.
