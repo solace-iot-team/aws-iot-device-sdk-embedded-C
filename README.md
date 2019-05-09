@@ -37,8 +37,10 @@ Find a getting started tutorial below, the original release branch [readme.md](h
 ### Set up the hardware and modem connectivity
 See this [tutorial](https://github.com/TELUS-Emerging-IoT/TELUS-Devkit-Hardware-Tutorial/blob/master/README.md)
 
-### Obtain Telus Modem / Secure Storage API
-TBC - may be packaged with Operating System. If building from source will supply C14/C++14 compatible source code on request.
+### Obtain Telus Modem / SCC Toolkit API
+The library is provided in a ZIP file, unzip and change into the directory where you unzipped the contents.
+Then copy SCC Toolkit library components to the Raspberry PI via SCP.
+Headers from folder `inc` to `/usr/include` on the raspberry pi, `libscc-toolkit.so` and `libscc-toolkit.a` to `/usr/lib` on the Raspberry PI.
 
 ### Optional - Apply BlackBerry security patch to Raspbian
 TBC - add link
@@ -84,11 +86,16 @@ The basic process is explained here: (https://raspberry-projects.com/pi/programm
 The sample application requires Wiring PI to interact with the shield's user button and LED.
 Add the header files and libraries to the toolchain as described above, obtain these from the raspberry PI via SCP:
 ```
-$ scp {user}@{host or ip}:/usr/lib/libwiringPi* {local toolchain lib directory}
-$ scp {user}@{host or ip}:/usr/include/wiringPi* {local toolchain include directory}
+$ scp {user}@{host or ip}:/usr/lib/libwiringPi* {local toolchain sysroot/usr/lib directory}
+$ scp {user}@{host or ip}:/usr/include/wiringPi* {local toolchain sysroot/usr/include directory}
 ```
 
-TBC - Download Telus API lib and include if provided with OS.
+The SCC Toolkit requires libpcsclite, as above please obtian these files via SCP:
+```
+$ scp {user}@{host or ip}:/usr/lib/arm-linux-gnueabihf/libpcsclite.* {local toolchain sysroot/usr/lib directory}
+
+```
+Copy SCC Toolkit library components to your `sysroot` directory, headers form folder `inc` to `sysroot/usr/include`, `libscc-toolkit.so` and `libscc-toolkit.a` to `sysroot/usr/lib`
 
 ## SDK and Sample Installation
 This section explains the individual steps to retrieve the necessary SDK files and be able to build the sample application.
