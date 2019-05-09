@@ -59,7 +59,7 @@ Download and install Eclipse [IDE for C/C++ Developers](https://www.eclipse.org/
 ### Obtain and install Raspberry Pi Tool Chain
 Tool chains for different platforms are available:
 * Windows: http://gnutoolchains.com/raspberry/
-* MacOS (verified during SDK adaption): https://github.com/yc2986/armv8-rpi3-linux-gnueabihf-gcc-8.1.0-macos-high-sierra,also see https://medium.com/coinmonks/setup-gcc-8-1-cross-compiler-toolchain-for-raspberry-pi-3-on-macos-high-sierra-cb3fc8b6443e.
+* MacOS (verified during SDK adaption): download [ZIP](https://github.com/yc2986/armv8-rpi3-linux-gnueabihf-gcc-8.1.0-macos-high-sierra/archive/master.zip), also see [github](https://github.com/yc2986/armv8-rpi3-linux-gnueabihf-gcc-8.1.0-macos-high-sierra) and [documentation](https://medium.com/coinmonks/setup-gcc-8-1-cross-compiler-toolchain-for-raspberry-pi-3-on-macos-high-sierra-cb3fc8b6443e).
 * Linux: https://github.com/raspberrypi/tools/tree/master/arm-bcm2708
 
 Instructions on setting up a cross compile tool chain for RaspBerry PI in Eclipse - (https://dontpressthat.wordpress.com/2017/11/15/using-eclipse-to-write-c-c-programs-for-the-raspberrypi/)
@@ -114,6 +114,11 @@ Select import menu, then `From existing project folder` under `General`
 ![import_2](assets/images/110_eclipse_import_select_type.png)
 Locate the folder where you stored the source code, the project should be detected. Click `Finish`
 ![import_3](assets/images/120_eclipse_import_select_folder.png)
+
+After importing adjust the location of your Raspberry PI toolchain, open project preferences and then adjust the path in the following two dialogs:
+![adjust paths](assets/images/projectsettings_01.png)
+![adjust paths](assets/images/projectsettings_02.png)
+
 
 ## Solace Cloud Access 7 Connectivity
 
