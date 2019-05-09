@@ -57,7 +57,7 @@ Download and install Eclipse [IDE for C/C++ Developers](https://www.eclipse.org/
 ### Obtain and install Raspberry Pi Tool Chain
 Tool chains for different platforms are available:
 * Windows: http://gnutoolchains.com/raspberry/
-* MacOS (verified during SDK adaption): https://www.jaredwolff.com/toolchains/#show1
+* MacOS (verified during SDK adaption): https://github.com/yc2986/armv8-rpi3-linux-gnueabihf-gcc-8.1.0-macos-high-sierra,also see https://medium.com/coinmonks/setup-gcc-8-1-cross-compiler-toolchain-for-raspberry-pi-3-on-macos-high-sierra-cb3fc8b6443e.
 * Linux: https://github.com/raspberrypi/tools/tree/master/arm-bcm2708
 
 Instructions on setting up a cross compile tool chain for RaspBerry PI in Eclipse - (https://dontpressthat.wordpress.com/2017/11/15/using-eclipse-to-write-c-c-programs-for-the-raspberrypi/)
