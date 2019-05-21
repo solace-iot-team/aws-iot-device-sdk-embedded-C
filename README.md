@@ -23,7 +23,7 @@ Find a getting started tutorial below, the original release branch [readme.md](h
 ## Overview
 * Prerequisites
   * Set up the hardware and modem connectivity 
-  * Obtain the Telus Modem / Secure Storage API (compiled versio may be delivered with BlackBerry OS,  
+  * Obtain the Telus Modem / Secure Storage API  
   * Optional - Apply BlackBerry security patch to Raspbian
   * Optional - provision certificates and keys onto the secure storage
 * Set up a development environment:
@@ -47,7 +47,7 @@ TBC - add link
 
 ### Optional - provision certificates and keys onto the secure storage
 The repository contains a sample application () that uploads files to the secure storage.
-Participants wil be eithe rprovided with a pre-configured SIM or will be supplied with the device certificate, key and Digicert Rooot CA Certificate for Solace Cloud.
+Participants wil be either provided with a pre-configured SIM or will be supplied with the device certificate, key and Digicert Rooot CA Certificate for Solace Cloud.
 
 ## Development directly on Device
 Source code is provided as is with a sample make file. No further instrucitons are available at this point.
@@ -59,7 +59,7 @@ Download and install Eclipse [IDE for C/C++ Developers](https://www.eclipse.org/
 ### Obtain and install Raspberry Pi Tool Chain
 Tool chains for different platforms are available:
 * Windows: http://gnutoolchains.com/raspberry/
-* MacOS (verified during SDK adaption): https://github.com/yc2986/armv8-rpi3-linux-gnueabihf-gcc-8.1.0-macos-high-sierra,also see https://medium.com/coinmonks/setup-gcc-8-1-cross-compiler-toolchain-for-raspberry-pi-3-on-macos-high-sierra-cb3fc8b6443e.
+* MacOS (verified during SDK adaption): download [ZIP](https://github.com/yc2986/armv8-rpi3-linux-gnueabihf-gcc-8.1.0-macos-high-sierra/archive/master.zip), also see [github](https://github.com/yc2986/armv8-rpi3-linux-gnueabihf-gcc-8.1.0-macos-high-sierra) and [documentation](https://medium.com/coinmonks/setup-gcc-8-1-cross-compiler-toolchain-for-raspberry-pi-3-on-macos-high-sierra-cb3fc8b6443e).
 * Linux: https://github.com/raspberrypi/tools/tree/master/arm-bcm2708
 
 Instructions on setting up a cross compile tool chain for RaspBerry PI in Eclipse - (https://dontpressthat.wordpress.com/2017/11/15/using-eclipse-to-write-c-c-programs-for-the-raspberrypi/)
@@ -80,7 +80,7 @@ $ gdbserver --multi 192.168.0.131:2345
 
 ### Import required libraries from Raspberry PI
 
-In order to compile code that relies on libraries installe don the Raspberry PI these need to be added to the Tool Chain.
+In order to compile code that relies on libraries installed on the Raspberry PI these need to be added to the Tool Chain.
 The basic process is explained here: (https://raspberry-projects.com/pi/programming-in-c/compilers-and-ides/eclipse/adding-libraries-to-eclipse-for-windows)
 
 The sample application requires Wiring PI to interact with the shield's user button and LED.
@@ -95,7 +95,7 @@ The SCC Toolkit requires libpcsclite, as above please obtian these files via SCP
 $ scp {user}@{host or ip}:/usr/lib/arm-linux-gnueabihf/libpcsclite.* {local toolchain sysroot/usr/lib directory}
 
 ```
-Copy SCC Toolkit library components to your `sysroot` directory, headers form folder `inc` to `sysroot/usr/include`, `libscc-toolkit.so` and `libscc-toolkit.a` to `sysroot/usr/lib`
+Copy SCC Toolkit library components to your `sysroot` directory, headers from folder `inc` to `sysroot/usr/include`, `libscc-toolkit.so` and `libscc-toolkit.a` to `sysroot/usr/lib`
 
 ## SDK and Sample Installation
 This section explains the individual steps to retrieve the necessary SDK files and be able to build the sample application.
@@ -114,6 +114,11 @@ Select import menu, then `From existing project folder` under `General`
 ![import_2](assets/images/110_eclipse_import_select_type.png)
 Locate the folder where you stored the source code, the project should be detected. Click `Finish`
 ![import_3](assets/images/120_eclipse_import_select_folder.png)
+
+After importing adjust the location of your Raspberry PI toolchain, open project preferences and then adjust the path in the following two dialogs:
+![adjust paths](assets/images/projectsettings_01.png)
+![adjust paths](assets/images/projectsettings_02.png)
+
 
 ## Solace Cloud Access 7 Connectivity
 
