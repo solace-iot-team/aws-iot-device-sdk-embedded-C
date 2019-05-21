@@ -102,7 +102,7 @@ This section explains the individual steps to retrieve the necessary SDK files a
 
 Steps:
 
- * Download the released ZIP from https://github.com/solace-iot-team/solace-iot-device-sdk-embedded-C/releases/tag/v.0.9.0  
+ * Download the released ZIP from https://github.com/solace-iot-team/solace-iot-device-sdk-embedded-C/releases/tag/v0.9.1 
  * Unzip the file to a new directory
  * Import application into Eclipse
  
