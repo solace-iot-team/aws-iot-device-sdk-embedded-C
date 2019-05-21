@@ -192,12 +192,12 @@ int main(int argc, char** argv) {
 	std::unique_ptr<scc::Modem_Connector> modem;
 	modem = std::make_unique<scc::Modem_Connector>(SCC_PORT);
 	scc::SCC_Application sccApp(*modem);
-	std::__cxx11::string deviceIMEIStr = modem->readImei();
-	char *deviceIMEI = new char[deviceIMEIStr.size() + 1];
-	std::strcpy(deviceIMEI, deviceIMEIStr.c_str());
+	std::__cxx11::string deviceIMSIStr = modem->readImsi();
+	char *deviceIMSI = new char[deviceIMSIStr.size() + 1];
+	std::strcpy(deviceIMSI, deviceIMSIStr.c_str());
 
 	IOT_INFO("****************************************");
-	IOT_INFO("IMEI / Device id [%s]", deviceIMEI);
+	IOT_INFO("IMSI / Device id [%s]", deviceIMSI);
 	IOT_INFO("****************************************");
 
 	// initialise the wiring pi library that allows to access GPIO pins - used to interact with user led and user button
@@ -285,10 +285,10 @@ int main(int argc, char** argv) {
 	connectParams.keepAliveIntervalInSec = 600;
 	connectParams.isCleanSession = true;
 	connectParams.MQTTVersion = MQTT_3_1_1;
-	connectParams.pClientID = deviceIMEI;
-	connectParams.clientIDLen = (uint16_t) strlen(deviceIMEI);
+	connectParams.pClientID = deviceIMSI;
+	connectParams.clientIDLen = (uint16_t) strlen(deviceIMSI);
 	connectParams.isWillMsgPresent = false;
-	connectParams.pUsername = deviceIMEI;
+	connectParams.pUsername = deviceIMSI;
 
 	IOT_INFO("Connecting...");
 	rc = aws_iot_mqtt_connect(&client, &connectParams);
@@ -311,7 +311,7 @@ int main(int argc, char** argv) {
 	IOT_INFO("****************************************");
 	char cTopicDevice[100];
 	sprintf(cTopicDevice, "$create/iot-control/CA/ON/device/%s/command",
-			deviceIMEI);
+			deviceIMSI);
 	IOT_INFO("Subscribing to device command... [%s]", cTopicDevice);
 	rc = aws_iot_mqtt_subscribe(&client, cTopicDevice, strlen(cTopicDevice),
 			QOS0, iot_subscribe_callback_handler, NULL);
@@ -351,7 +351,7 @@ int main(int argc, char** argv) {
 		infinitePublishFlag = false;
 	}
 	char topic[255];
-	sprintf(topic, PUBLISH_TOPIC, deviceIMEI);
+	sprintf(topic, PUBLISH_TOPIC, deviceIMSI);
 	IOT_INFO("****************************************");
 	IOT_INFO("Publishing to topic [%s]", topic);
 	IOT_INFO("****************************************");
