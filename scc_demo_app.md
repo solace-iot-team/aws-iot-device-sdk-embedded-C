@@ -1,5 +1,5 @@
-o build the scc demo application through linux command line:
--------------------------------------------------------------
+# Build the scc demo application through linux command line:
+---
 
 1. Install libssl-dev through apt-get
 	`sudo apt-get install libssl-dev`
@@ -18,9 +18,8 @@ o build the scc demo application through linux command line:
 	`arm-linux-gnueabihf-g++ demo-src/demo3.cpp -lssl -lcrypto -lscc-toolkit -I./inc/ -std=c++17 -o demo3`
 	
 
-To build the scc demo application through EclipseIDE 4.11.0(Linux):
--------------------------------------------------------------------
-
+# To build the scc demo application through EclipseIDE 4.11.0(Linux):
+---
 1. Follow the command line steps (1) to (7)
 2. Launch Eclipse IDE
 3. File -> New -> C++ Project -> C++ Managed Build

@@ -105,7 +105,6 @@ Steps:
  * Download the released ZIP from https://github.com/solace-iot-team/solace-iot-device-sdk-embedded-C/releases/tag/v.0.9.0  
  * Unzip the file to a new directory
  * Import application into Eclipse
- * Add the Secure Storage API source code - copy headers into `inc-gd` folder, code into `src-gd` folder.
  
 ### Import Project into Eclipse
 
