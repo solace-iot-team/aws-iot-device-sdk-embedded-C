@@ -108,7 +108,7 @@ int get_scc_internal(scc::SCC_Application *sccApp, int source,
 		buffer[entryOrCert.length()] = 0;
 		return size;
 	} catch (const scc::UICC_Connector_Exception &e) {
-		IOT_INFO("Error copying from scc [%s]",e.getError().c_str());
+		IOT_INFO("Error copying from scc [%s]", e.getError().c_str());
 		throw &e;
 	}
 
@@ -188,208 +188,219 @@ void disconnectCallbackHandler(AWS_IoT_Client *pClient, void *data) {
 
 int main(int argc, char** argv) {
 
-	// connect to the modem and the SIM app, read device IMEI to use as device identification in client id, topics etc.
-	std::unique_ptr<scc::Modem_Connector> modem;
-	modem = std::make_unique<scc::Modem_Connector>(SCC_PORT);
-	scc::SCC_Application sccApp(*modem);
-	std::__cxx11::string deviceIMSIStr = modem->readImsi();
-	char *deviceIMSI = new char[deviceIMSIStr.size() + 1];
-	std::strcpy(deviceIMSI, deviceIMSIStr.c_str());
-
-	IOT_INFO("****************************************");
-	IOT_INFO("IMSI / Device id [%s]", deviceIMSI);
-	IOT_INFO("****************************************");
-
-	// initialise the wiring pi library that allows to access GPIO pins - used to interact with user led and user button
-	wiringPiSetupPhys();
-	pinMode(USER_LED_PHYS, OUTPUT);
-	pinMode(USER_BTN_PHYS, INPUT);
-
-	bool infinitePublishFlag = true;
-
-	char cPayload[100];
-
-	int32_t i = 0;
-
-	IoT_Error_t rc = FAILURE;
-
-	// set up the MQTT CLient and connect
-	AWS_IoT_Client client;
-	IoT_Client_Init_Params mqttInitParams = iotClientInitParamsDefault;
-	IoT_Client_Connect_Params connectParams = iotClientConnectParamsDefault;
-
-	IoT_Publish_Message_Params paramsQOS0;
-
-	// echo security paramaters set in aws_iot_config
-	IOT_DEBUG("rootCA %s", AWS_IOT_ROOT_CA_FILENAME);
-	IOT_DEBUG("clientCRT %s", AWS_IOT_CERTIFICATE_FILENAME);
-	IOT_DEBUG("clientKey %s", AWS_IOT_PRIVATE_KEY_FILENAME);
-
-	mqttInitParams.enableAutoReconnect = false; // We enable this later below
-	mqttInitParams.pHostURL = HostAddress;
-	mqttInitParams.port = port;
-
-	/**
-	 * Obtain the location of the certificates and key to use.
-	 * First initialise the MQTT connection with these locations allowing them to be treated as file locations.
-	 * Then attempt to use the locations as keys on the secure storage and load entries and certificates form the card into the mqttInitParams
-	 * The MQTT client library will attempt to use the location as file locations and if unsusccessful uses the payload and length parameters instead.
-	 */
-	mqttInitParams.pRootCALocation = (char *) AWS_IOT_ROOT_CA_FILENAME;
-	unsigned char buffer[64000];
 	try {
-		mqttInitParams.rootCAPayloadLength = scc_get_certificate_by_label(
-				&sccApp, AWS_IOT_ROOT_CA_FILENAME, buffer);
-		mqttInitParams.pRootCAPayload = buffer;
-	} catch (scc::UICC_Exception &e) {
-		IOT_INFO("Root CA not loaded from SCC [%s]", AWS_IOT_PRIVATE_KEY_FILENAME);
-	}
-	try {
-		unsigned char bufferDeviceCert[64000];
-		mqttInitParams.deviceCertPayloadLength = scc_get_certificate_by_label(
-				&sccApp, AWS_IOT_CERTIFICATE_FILENAME, bufferDeviceCert);
-		mqttInitParams.pDeviceCertPayload = bufferDeviceCert;
-	} catch (scc::UICC_Exception &e) {
-		IOT_INFO( "Device cert not loaded from SCC [%s]", AWS_IOT_PRIVATE_KEY_FILENAME);
-	}
-	mqttInitParams.pDeviceCertLocation = (char *) AWS_IOT_CERTIFICATE_FILENAME;
+		// connect to the modem and the SIM app, read device IMEI to use as device identification in client id, topics etc.
+		std::unique_ptr<scc::Modem_Connector> modem;
+		modem = std::make_unique<scc::Modem_Connector>(SCC_PORT);
+		scc::SCC_Application sccApp(*modem);
+		std::__cxx11::string deviceIMSIStr = modem->readImsi();
+		char *deviceIMSI = new char[deviceIMSIStr.size() + 1];
+		std::strcpy(deviceIMSI, deviceIMSIStr.c_str());
 
-	unsigned char bufferDevicePrivateKey[64000];
-	mqttInitParams.pDevicePrivateKeyLocation =
-			(char *) AWS_IOT_PRIVATE_KEY_FILENAME;
-	try {
-		mqttInitParams.devicePrivatePayloadLength = scc_get_entry_by_label(
-				&sccApp, (char *) AWS_IOT_PRIVATE_KEY_FILENAME,
-				bufferDevicePrivateKey);
-		mqttInitParams.pDevicePrivatePayload = bufferDevicePrivateKey;
-	} catch (scc::UICC_Exception &e) {
-		IOT_INFO( "Private key not loaded from SCC [%s]", AWS_IOT_PRIVATE_KEY_FILENAME);
-	}
+		IOT_INFO("****************************************");
+		IOT_INFO("IMSI / Device id [%s]", deviceIMSI);
+		IOT_INFO("****************************************");
 
-	/* we are done with the modem / scc app, destroy associated objects.
-		Not doing this may lock up the shield/SCC Connector and require a hard reset of the shield
-	*/
-	sccApp.~SCC_Application();
-	modem.get()->~Modem_Connector();
-	modem.release();
-	mqttInitParams.mqttCommandTimeout_ms = 20000;
-	mqttInitParams.tlsHandshakeTimeout_ms = 5000;
-	mqttInitParams.isSSLHostnameVerify = true;
-	mqttInitParams.disconnectHandler = disconnectCallbackHandler;
-	mqttInitParams.disconnectHandlerData = NULL;
-	rc = aws_iot_mqtt_init(&client, &mqttInitParams);
-	if (SUCCESS != rc) {
-		IOT_ERROR("aws_iot_mqtt_init returned error : %d ", rc);
-		return rc;
-	}
-	connectParams.keepAliveIntervalInSec = 600;
-	connectParams.isCleanSession = true;
-	connectParams.MQTTVersion = MQTT_3_1_1;
-	connectParams.pClientID = deviceIMSI;
-	connectParams.clientIDLen = (uint16_t) strlen(deviceIMSI);
-	connectParams.isWillMsgPresent = false;
-	connectParams.pUsername = deviceIMSI;
+		// initialise the wiring pi library that allows to access GPIO pins - used to interact with user led and user button
+		wiringPiSetupPhys();
+		pinMode(USER_LED_PHYS, OUTPUT);
+		pinMode(USER_BTN_PHYS, INPUT);
 
-	IOT_INFO("Connecting...");
-	rc = aws_iot_mqtt_connect(&client, &connectParams);
-	if (SUCCESS != rc) {
-		IOT_ERROR("Error(%d) connecting to %s:%d", rc, mqttInitParams.pHostURL,
-				mqttInitParams.port);
-		return rc;
-	}
-	/*
-	 * Enable Auto Reconnect functionality. Minimum and Maximum time of Exponential backoff are set in aws_iot_config.h
-	 *  #AWS_IOT_MQTT_MIN_RECONNECT_WAIT_INTERVAL
-	 *  #AWS_IOT_MQTT_MAX_RECONNECT_WAIT_INTERVAL
-	 */
-	rc = aws_iot_mqtt_autoreconnect_set_status(&client, true);
-	if (SUCCESS != rc) {
-		IOT_ERROR("Unable to set Auto Reconnect to true - %d", rc);
-		return rc;
-	}
+		bool infinitePublishFlag = true;
 
-	IOT_INFO("****************************************");
-	char cTopicDevice[100];
-	sprintf(cTopicDevice, "$create/iot-control/CA/ON/device/%s/command",
-			deviceIMSI);
-	IOT_INFO("Subscribing to device command... [%s]", cTopicDevice);
-	rc = aws_iot_mqtt_subscribe(&client, cTopicDevice, strlen(cTopicDevice),
-			QOS0, iot_subscribe_callback_handler, NULL);
-	if (SUCCESS != rc) {
-		IOT_ERROR("Error subscribing : %d ", rc);
-		return rc;
-	}
-	char cTopicRegion[100];
-	sprintf(cTopicRegion, "$create/iot-control/CA/ON/device/command");
-	IOT_INFO("Subscribing to regional command... [%s]", cTopicRegion);
+		char cPayload[100];
 
-	rc = aws_iot_mqtt_subscribe(&client, cTopicRegion, strlen(cTopicRegion),
-			QOS0, iot_subscribe_callback_handler, NULL);
-	if (SUCCESS != rc) {
-		IOT_ERROR("Error subscribing : %d ", rc);
-		return rc;
-	}
-	char cTopicNation[100];
-	sprintf(cTopicNation, "$create/iot-control/CA/device/command");
-	IOT_INFO("Subscribing to national command ... [%s]", cTopicNation);
+		int32_t i = 0;
 
-	rc = aws_iot_mqtt_subscribe(&client, cTopicNation, strlen(cTopicNation),
-			QOS0, iot_subscribe_callback_handler, NULL);
-	if (SUCCESS != rc) {
-		IOT_ERROR("Error subscribing : %d ", rc);
-		return rc;
-	}
-	IOT_INFO("****************************************");
+		IoT_Error_t rc = FAILURE;
 
-	sprintf(cPayload, "%s : %d ", "hello from SDK", i);
+		// set up the MQTT CLient and connect
+		AWS_IoT_Client client;
+		IoT_Client_Init_Params mqttInitParams = iotClientInitParamsDefault;
+		IoT_Client_Connect_Params connectParams = iotClientConnectParamsDefault;
 
-	paramsQOS0.qos = QOS0;
-	paramsQOS0.payload = (void *) cPayload;
-	paramsQOS0.isRetained = 0;
+		IoT_Publish_Message_Params paramsQOS0;
 
-	if (publishCount != 0) {
-		infinitePublishFlag = false;
-	}
-	char topic[255];
-	sprintf(topic, PUBLISH_TOPIC, deviceIMSI);
-	IOT_INFO("****************************************");
-	IOT_INFO("Publishing to topic [%s]", topic);
-	IOT_INFO("****************************************");
+		// echo security paramaters set in aws_iot_config
+		IOT_DEBUG("rootCA %s", AWS_IOT_ROOT_CA_FILENAME);
+		IOT_DEBUG("clientCRT %s", AWS_IOT_CERTIFICATE_FILENAME);
+		IOT_DEBUG("clientKey %s", AWS_IOT_PRIVATE_KEY_FILENAME);
 
-	while ((NETWORK_ATTEMPTING_RECONNECT == rc || NETWORK_RECONNECTED == rc
-			|| SUCCESS == rc) && (publishCount > 0 || infinitePublishFlag)) {
+		mqttInitParams.enableAutoReconnect = false; // We enable this later below
+		mqttInitParams.pHostURL = HostAddress;
+		mqttInitParams.port = port;
 
-		//Max time the yield function will wait for read messages
-		rc = aws_iot_mqtt_yield(&client, 100);
-		if (NETWORK_ATTEMPTING_RECONNECT == rc) {
-			// If the client is attempting to reconnect we will skip the rest of the loop.
-			continue;
+		/**
+		 * Obtain the location of the certificates and key to use.
+		 * First initialise the MQTT connection with these locations allowing them to be treated as file locations.
+		 * Then attempt to use the locations as keys on the secure storage and load entries and certificates form the card into the mqttInitParams
+		 * The MQTT client library will attempt to use the location as file locations and if unsusccessful uses the payload and length parameters instead.
+		 */
+		mqttInitParams.pRootCALocation = (char *) AWS_IOT_ROOT_CA_FILENAME;
+		unsigned char buffer[64000];
+		try {
+			mqttInitParams.rootCAPayloadLength = scc_get_certificate_by_label(
+					&sccApp, AWS_IOT_ROOT_CA_FILENAME, buffer);
+			mqttInitParams.pRootCAPayload = buffer;
+		} catch (scc::UICC_Exception &e) {
+			IOT_INFO("Root CA not loaded from SCC [%s]",
+					AWS_IOT_PRIVATE_KEY_FILENAME);
 		}
-		delay(50);
-		// send message only if user button is pressed
-		int btnPressed = !(digitalRead(USER_BTN_PHYS));
-		if (btnPressed) {
-			sprintf(cPayload, "{\"activity\":\"%s\", \"count\": %d }",
-					"Button pressed", i++);
-			paramsQOS0.payloadLen = strlen(cPayload);
-			rc = aws_iot_mqtt_publish(&client, topic, strlen(topic),
-					&paramsQOS0);
-			if (publishCount > 0) {
-				publishCount--;
+		try {
+			unsigned char bufferDeviceCert[64000];
+			mqttInitParams.deviceCertPayloadLength =
+					scc_get_certificate_by_label(&sccApp,
+							AWS_IOT_CERTIFICATE_FILENAME, bufferDeviceCert);
+			mqttInitParams.pDeviceCertPayload = bufferDeviceCert;
+		} catch (scc::UICC_Exception &e) {
+			IOT_INFO("Device cert not loaded from SCC [%s]",
+					AWS_IOT_PRIVATE_KEY_FILENAME);
+		}
+		mqttInitParams.pDeviceCertLocation =
+				(char *) AWS_IOT_CERTIFICATE_FILENAME;
+
+		unsigned char bufferDevicePrivateKey[64000];
+		mqttInitParams.pDevicePrivateKeyLocation =
+				(char *) AWS_IOT_PRIVATE_KEY_FILENAME;
+		try {
+			mqttInitParams.devicePrivatePayloadLength = scc_get_entry_by_label(
+					&sccApp, (char *) AWS_IOT_PRIVATE_KEY_FILENAME,
+					bufferDevicePrivateKey);
+			mqttInitParams.pDevicePrivatePayload = bufferDevicePrivateKey;
+		} catch (scc::UICC_Exception &e) {
+			IOT_INFO("Private key not loaded from SCC [%s]",
+					AWS_IOT_PRIVATE_KEY_FILENAME);
+		}
+
+		/* we are done with the modem / scc app, destroy associated objects.
+		 Not doing this may lock up the shield/SCC Connector and require a hard reset of the shield
+		 */
+		sccApp.~SCC_Application();
+		modem.get()->~Modem_Connector();
+		modem.release();
+
+		mqttInitParams.mqttCommandTimeout_ms = 20000;
+		mqttInitParams.tlsHandshakeTimeout_ms = 5000;
+		mqttInitParams.isSSLHostnameVerify = true;
+		mqttInitParams.disconnectHandler = disconnectCallbackHandler;
+		mqttInitParams.disconnectHandlerData = NULL;
+		rc = aws_iot_mqtt_init(&client, &mqttInitParams);
+		if (SUCCESS != rc) {
+			IOT_ERROR("aws_iot_mqtt_init returned error : %d ", rc);
+			return rc;
+		}
+		connectParams.keepAliveIntervalInSec = 600;
+		connectParams.isCleanSession = true;
+		connectParams.MQTTVersion = MQTT_3_1_1;
+		connectParams.pClientID = deviceIMSI;
+		connectParams.clientIDLen = (uint16_t) strlen(deviceIMSI);
+		connectParams.isWillMsgPresent = false;
+		connectParams.pUsername = deviceIMSI;
+
+		IOT_INFO("Connecting...");
+		rc = aws_iot_mqtt_connect(&client, &connectParams);
+		if (SUCCESS != rc) {
+			IOT_ERROR("Error(%d) connecting to %s:%d", rc,
+					mqttInitParams.pHostURL, mqttInitParams.port);
+			return rc;
+		}
+		/*
+		 * Enable Auto Reconnect functionality. Minimum and Maximum time of Exponential backoff are set in aws_iot_config.h
+		 *  #AWS_IOT_MQTT_MIN_RECONNECT_WAIT_INTERVAL
+		 *  #AWS_IOT_MQTT_MAX_RECONNECT_WAIT_INTERVAL
+		 */
+		rc = aws_iot_mqtt_autoreconnect_set_status(&client, true);
+		if (SUCCESS != rc) {
+			IOT_ERROR("Unable to set Auto Reconnect to true - %d", rc);
+			return rc;
+		}
+
+		IOT_INFO("****************************************");
+		char cTopicDevice[100];
+		sprintf(cTopicDevice, "$create/iot-control/CA/ON/device/%s/command",
+				deviceIMSI);
+		IOT_INFO("Subscribing to device command... [%s]", cTopicDevice);
+		rc = aws_iot_mqtt_subscribe(&client, cTopicDevice, strlen(cTopicDevice),
+				QOS0, iot_subscribe_callback_handler, NULL);
+		if (SUCCESS != rc) {
+			IOT_ERROR("Error subscribing : %d ", rc);
+			return rc;
+		}
+		char cTopicRegion[100];
+		sprintf(cTopicRegion, "$create/iot-control/CA/ON/device/command");
+		IOT_INFO("Subscribing to regional command... [%s]", cTopicRegion);
+
+		rc = aws_iot_mqtt_subscribe(&client, cTopicRegion, strlen(cTopicRegion),
+				QOS0, iot_subscribe_callback_handler, NULL);
+		if (SUCCESS != rc) {
+			IOT_ERROR("Error subscribing : %d ", rc);
+			return rc;
+		}
+		char cTopicNation[100];
+		sprintf(cTopicNation, "$create/iot-control/CA/device/command");
+		IOT_INFO("Subscribing to national command ... [%s]", cTopicNation);
+
+		rc = aws_iot_mqtt_subscribe(&client, cTopicNation, strlen(cTopicNation),
+				QOS0, iot_subscribe_callback_handler, NULL);
+		if (SUCCESS != rc) {
+			IOT_ERROR("Error subscribing : %d ", rc);
+			return rc;
+		}
+		IOT_INFO("****************************************");
+
+		sprintf(cPayload, "%s : %d ", "hello from SDK", i);
+
+		paramsQOS0.qos = QOS0;
+		paramsQOS0.payload = (void *) cPayload;
+		paramsQOS0.isRetained = 0;
+
+		if (publishCount != 0) {
+			infinitePublishFlag = false;
+		}
+		char topic[255];
+		sprintf(topic, PUBLISH_TOPIC, deviceIMSI);
+		IOT_INFO("****************************************");
+		IOT_INFO("Publishing to topic [%s]", topic);
+		IOT_INFO("****************************************");
+
+		while ((NETWORK_ATTEMPTING_RECONNECT == rc || NETWORK_RECONNECTED == rc
+				|| SUCCESS == rc) && (publishCount > 0 || infinitePublishFlag)) {
+
+			//Max time the yield function will wait for read messages
+			rc = aws_iot_mqtt_yield(&client, 100);
+			if (NETWORK_ATTEMPTING_RECONNECT == rc) {
+				// If the client is attempting to reconnect we will skip the rest of the loop.
+				continue;
+			}
+			delay(50);
+			// send message only if user button is pressed
+			int btnPressed = !(digitalRead(USER_BTN_PHYS));
+			if (btnPressed) {
+				sprintf(cPayload, "{\"activity\":\"%s\", \"count\": %d }",
+						"Button pressed", i++);
+				paramsQOS0.payloadLen = strlen(cPayload);
+				rc = aws_iot_mqtt_publish(&client, topic, strlen(topic),
+						&paramsQOS0);
+				if (publishCount > 0) {
+					publishCount--;
+				}
+			}
+
+			if (publishCount == 0 && !infinitePublishFlag) {
+				break;
+			}
+
+			// Wait for all the messages to be received
+			aws_iot_mqtt_yield(&client, 100);
+
+			if (SUCCESS != rc) {
+				IOT_ERROR("An error occurred in the loop.\n");
 			}
 		}
-
-		if (publishCount == 0 && !infinitePublishFlag) {
-			break;
-		}
-
-		// Wait for all the messages to be received
-		aws_iot_mqtt_yield(&client, 100);
-
-		if (SUCCESS != rc) {
-			IOT_ERROR("An error occurred in the loop.\n");
-		}
+		return rc;
+	} catch (const scc::UICC_Connector_Exception &e) {
+		IOT_INFO("Error accessing cellular shield [%s]", e.getError().c_str());
+		throw &e;
 	}
-	return rc;
 }
 
