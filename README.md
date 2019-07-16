@@ -142,6 +142,7 @@ Switch to `Client Usernames` and verify your device identifier exists (in the bo
 ### Setup Connectivity & Security
 * Locate the file `aws_iot_config.h`
 * Replace `AWS_IOT_MQTT_HOST`
+* If you need to connect to the cellular shield on a different USB or serial port to the default adjust this line of the config accordingly: ``#define SCC_PORT "/dev/ttyUSB2"``, for example if you want to use the serial port connection use ``#define SCC_PORT "/dev/ttyS0"``
 * If you provisioned the certificates and key under different keys in the secure storage adjust AWS_IOT_ROOT_CA_FILENAME, AWS_IOT_CERTIFICATE_FILENAME, AWS_IOT_PRIVATE_KEY_FILENAME
 
 ```
