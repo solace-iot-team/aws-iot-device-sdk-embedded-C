@@ -119,7 +119,7 @@ After importing adjust the location of your Raspberry PI toolchain, open project
 ![adjust paths](assets/images/projectsettings_02.png)
 
 
-## Solace Cloud Access 7 Connectivity
+## Solace Cloud Access / Connectivity
 
 ### Login to Solace Cloud
 Participants will receive an inivtation by email to join the Bootcamp Solace Cloud Account, login at (https://console.solace.cloud/)
