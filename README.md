@@ -121,12 +121,12 @@ After importing adjust the location of your Raspberry PI toolchain, open project
 
 ## Solace Cloud Access / Connectivity
 
-### Login to Solace Cloud
-Participants will receive an inivtation by email to join the Bootcamp Solace Cloud Account, login at (https://console.solace.cloud/)
-![Login](assets/images/01_cloud_login.png)
+### Register a Solace Cloud account, setup a Solace Service
+Please follow the instructions on this page to get started with Solace Cloud and to prepare the Solace Service for use with the dev kit:
+(https://github.com/solace-iot-team/solace-iot-device-sdk-embedded-C/tree/master/solace-setup)
+
 ### Get Cloud Connection Parameters
-(currently requires an Enterprise plan for mutual TLS authentication)
-Locate the service
+in the cloud console, locate the service you created in the previous step
 ![Login](assets/images/02_cloud_services.png)
 Select the service and switch to the `Connect` tab, expand the MQTT section and take note of the `Secured MQTT Host` URL:
 ![Connectivity](assets/images/03_service_connectivity.png)
