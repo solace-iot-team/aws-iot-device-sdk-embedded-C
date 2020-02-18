@@ -62,13 +62,5 @@ Review that your client username was created:
 
 ![add_client](assets/07_AccessControlAddClient_03.png)
 
-### Alternative - creating client usernames via REST API
-
-If you have to register multiple devices you might prefer to use thhe REST API. You can obtain credentials from the Solace cloud console, under the "SEMP REST API" section:
-![add_client](assets/08_SEMP_Credentials.png)
-
-Here's
-
-
 
 
