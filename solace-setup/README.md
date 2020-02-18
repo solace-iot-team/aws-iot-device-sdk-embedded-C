@@ -43,4 +43,22 @@ Your certificate was uploaded successfully:
 Your new certificate was added:
 ![manage_certificates](assets/05_ClientCerts_04.png)
 
+### Setup Client User Names for devices
+
+Each device needs to be registered on the broker. In the L-Spark Secure IoT Accelerator we use the IMSI of the device/eSIM as the device id.
+Please register all devices you want to grant access to the broker to.
+
+Open the cloud service's "Management Console" - choos "Manage Service" and then the "Access Control" sub menu:
+![manage_acl](assets/06_GotoManageService.png)
+
+In the management console - switch to "Client Usernames", then click the add client username ("+ Client Username") button.
+Enter your device IMSI as the client username, then click "Create":
+![add_client](assets/07_AccessControlAddClient.png)
+On the next screen accept the defaults and make sure the client username is enabled.
+(Note - you could create dedicated client and ACL profiles for your devices to restrcit their access ot the broker and to topics on the broker)
+![add_client](assets/07_AccessControlAddClient_02.png)
+
+Review that your client username was created:
+
+![add_client](assets/07_AccessControlAddClient_03.png)
 
