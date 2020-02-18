@@ -15,9 +15,32 @@ Then click "Add Service".
 
 Choose the developer plan, then select cloud and region, enter a service name of your choice: 
 
-![create_service](solace-setup/assets/01_SetupService.png)
-![create_service](solace-setup/assets/02_SetupService.png)
+![create_service](assets/01_SetupService.png)
+![create_service](assets/02_SetupService.png)
 
 It will take a few minutes for your new service to start.
+
+### Configure Authentication
+
+Next you will need to set up your service for client certificate authentication:
+* Enable client certificate authentication
+* Upload the Root CA certificate [ca.pem](https://raw.githubusercontent.com/solace-iot-team/solace-iot-device-sdk-embedded-C/master/solace-setup/ca.pem)
+
+Navigate to the "Manage" tab of the service you have created:
+![setup_security](assets/03_SetupSecurity.png)
+
+Then click "Authentication" - enable "Client Certificate Authentication", leave "Validate Certificate Dates" as disabled (the default) and save your changes: 
+![configure_authentication](assets/04_Authentication.png)
+
+Then navigate back to the "Manage" tab main screen and click "Certificate Authorities". This is where you will add the new Root CA that you want to trust for authentication. 
+
+Click "Add Certificate":
+![manage_certificates](assets/05_ClientCerts_01.png)
+Provide a friendly name for your certificate and paste the contents of the [ca.pem](https://raw.githubusercontent.com/solace-iot-team/solace-iot-device-sdk-embedded-C/master/solace-setup/ca.pem) into the text box:
+![manage_certificates](assets/05_ClientCerts_02.png)
+Your certificate was uploaded successfully:
+![manage_certificates](assets/05_ClientCerts_03.png)
+Your new certificate was added:
+![manage_certificates](assets/05_ClientCerts_04.png)
 
 
